@@ -1,122 +1,70 @@
-// DJ JW SOUND BOARD
-
-const sounds = [
-  {
-    name: "DJ JW INTRO",
-    file: "sounds/sound1.mp3",
-    icon: "🎤"
-  },
-  {
-    name: "IF IT AIN'T DJ JW",
-    file: "sounds/sound2.mp3",
-    icon: "🗣️"
-  },
-  {
-    name: "DJ JW IN THE HOUSE",
-    file: "sounds/sound3.mp3",
-    icon: "🔥"
-  },
-  {
-    name: "CRACKER",
-    file: "sounds/sound4.mp3",
-    icon: "🍘"
-  },
-  {
-    name: "BIRTHDAY PARTIES",
-    file: "sounds/sound5.mp3",
-    icon: "🎂"
-  }
+// DJ JW Soundboard - local audio pads
+const pads = [
+  { label: 'DJ JW TAG 01', icon: '🎙️', file: 'sounds/sound-01.mp3' },
+  { label: 'DJ JW TAG 02', icon: '📣', file: 'sounds/sound-02.mp3' },
+  { label: 'DJ JW TAG 03', icon: '🔥', file: 'sounds/sound-03.mp3' },
+  { label: 'DJ JW TAG 04', icon: '🍪', file: 'sounds/sound-04.mp3' },
+  { label: 'DJ JW TAG 05', icon: '🎂', file: 'sounds/sound-05.mp3' }
 ];
 
-let activeSounds = [];
-let volume = 0.7;
+const board = document.querySelector('#soundboard');
+const stopButton = document.querySelector('#stop-all');
+const volumeSlider = document.querySelector('#volume');
+const volumeValue = document.querySelector('#volume-value');
+const nowPlaying = document.querySelector('#now-playing');
+let volume = Number(volumeSlider?.value ?? 0.75);
+const audioPool = new Set();
 
-// PLAY A SOUND
-function playSound(file, name) {
-  const audio = new Audio(file);
+
+function playPad(pad, button) {
+  const audio = new Audio(pad.file);
   audio.volume = volume;
-
-  activeSounds.push(audio);
-
-  audio.play().catch(error => {
-    console.error("Audio failed to play:", error);
+  audioPool.add(audio);
+  nowPlaying.textContent = `NOW PLAYING: ${pad.label}`;
+  button.classList.add('playing');
+  audio.addEventListener('ended', () => {
+    audioPool.delete(audio);
+    button.classList.remove('playing');
+    if (audioPool.size === 0) nowPlaying.textContent = 'SELECT A PAD';
+  }, { once: true });
+  audio.addEventListener('error', () => {
+    audioPool.delete(audio);
+    button.classList.remove('playing');
+    nowPlaying.textContent = `FILE NOT FOUND: ${pad.file}`;
+    console.error('Could not load audio file:', pad.file);
+  }, { once: true });
+  audio.play().catch(err => {
+    button.classList.remove('playing');
+    nowPlaying.textContent = 'AUDIO FAILED TO PLAY';
+    console.error(err);
   });
-
-  audio.onended = () => {
-    activeSounds = activeSounds.filter(sound => sound !== audio);
-  };
-
-  console.log("Playing:", name);
 }
 
-// STOP ALL SOUNDS
+
+pads.forEach((pad, index) => {
+  const button = document.createElement('button');
+  button.className = 'sound-pad';
+  button.type = 'button';
+  button.innerHTML = `<span class="sound-icon">${pad.icon}</span><span class="sound-name">${pad.label}</span>`;
+  button.setAttribute('aria-label', `Play ${pad.label}`);
+  button.addEventListener('click', () => playPad(pad, button));
+  board.appendChild(button);
+});
+
+
 function stopAll() {
-  activeSounds.forEach(audio => {
+  audioPool.forEach(audio => {
     audio.pause();
     audio.currentTime = 0;
   });
-
-  activeSounds = [];
+  audioPool.clear();
+  document.querySelectorAll('.sound-pad').forEach(button => button.classList.remove('playing'));
+  nowPlaying.textContent = 'ALL SOUNDS STOPPED';
 }
 
-// VOLUME CONTROL
-function setVolume(value) {
-  volume = Number(value);
-
-  activeSounds.forEach(audio => {
-    audio.volume = volume;
-  });
-}
-
-// CREATE SOUND BUTTONS
-function createSoundButtons() {
-  const container = document.getElementById("soundboard");
-
-  if (!container) {
-    console.error("Soundboard container not found!");
-    return;
-  }
-
-  container.innerHTML = "";
-
-  sounds.forEach(sound => {
-    const button = document.createElement("button");
-
-    button.className = "sound-pad";
-    button.innerHTML = `
-      <span class="sound-icon">${sound.icon}</span>
-      <span class="sound-name">${sound.name}</span>
-    `;
-
-    button.addEventListener("click", () => {
-      playSound(sound.file, sound.name);
-
-      button.classList.add("playing");
-
-      setTimeout(() => {
-        button.classList.remove("playing");
-      }, 300);
-    });
-
-    container.appendChild(button);
-  });
-}
-
-// INITIALIZE
-document.addEventListener("DOMContentLoaded", () => {
-  createSoundButtons();
-
-  const volumeSlider = document.getElementById("volume");
-
-  if (volumeSlider) {
-    volumeSlider.addEventListener("input", event => {
-      setVolume(event.target.value);
-    });
-  }
-
-  const stopButton = document.getElementById("stop-all");
-
-  if (stopButton) {
-    stopButton.addEventListener("click", stopAll);
-  }
+stopButton.addEventListener('click', stopAll);
+volumeSlider.addEventListener('input', event => {
+  volume = Number(event.target.value);
+  audioPool.forEach(audio => audio.volume = volume);
+  volumeValue.textContent = `${Math.round(volume * 100)}%`;
 });
