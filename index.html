@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJ JW — In The Building</title>
+<style>
+:root{--purple:#b44dff;--pink:#ff38d1;--cyan:#64f7ff;--bg:#07050b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:#fff;font-family:Impact,'Arial Black',system-ui,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 35%,#35114d 0%,transparent 38%),radial-gradient(circle at 20% 80%,#150b32 0%,transparent 45%);z-index:-2}
+.grid{position:fixed;inset:0;z-index:-1;opacity:.14;background-image:linear-gradient(#8e35c7 1px,transparent 1px),linear-gradient(90deg,#8e35c7 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent)}
+.wrap{max-width:1100px;margin:auto;padding:24px 18px 56px}
+.top{display:flex;justify-content:space-between;align-items:center;font:700 12px Arial,sans-serif;letter-spacing:4px;color:#caa4ed;text-transform:uppercase}
+.brand{font-size:clamp(32px,7vw,66px);letter-spacing:-2px;color:#fff;text-shadow:0 0 12px var(--purple),0 0 32px #7c22c8;margin:24px 0 0;text-align:center}
+.tag{font:700 12px Arial,sans-serif;letter-spacing:6px;color:var(--cyan);text-align:center;margin:4px 0 36px}
+main{display:grid;gap:18px}
+.card{position:relative;overflow:hidden;border:1px solid #4d2869;border-radius:20px;padding:clamp(24px,6vw,60px) 18px;text-align:center;background:linear-gradient(135deg,#170c22dd,#0b0712e8);box-shadow:0 0 24px #6f24a522,inset 0 0 30px #a52cff0c}
+.card:after{content:"";position:absolute;inset:-80% -30%;background:linear-gradient(115deg,transparent 42%,#ffffff0d 50%,transparent 58%);transform:translateX(-60%);animation:shine 7s ease-in-out infinite;pointer-events:none}
+.message{margin:0;text-transform:uppercase;font-weight:1000;line-height:.95;letter-spacing:-1px;font-size:clamp(32px,8vw,88px);overflow-wrap:anywhere}
+.one{color:#fff;text-shadow:0 0 8px var(--purple),0 0 24px #a52cff,0 0 54px #a52cff;animation:pulse 2.4s infinite alternate}
+.two{color:var(--pink);text-shadow:0 0 12px #ff38d1,0 0 34px #b50089}
+.three{color:#fff;text-shadow:0 0 8px var(--cyan),0 0 28px #00b5c8}
+.four{color:#d6a2ff;text-shadow:0 0 12px #9b39ff,0 0 34px #7514d2;font-size:clamp(44px,11vw,120px)}
+.footer{text-align:center;margin-top:30px;color:#8b6aa6;font:700 11px Arial,sans-serif;letter-spacing:5px}
+@keyframes pulse{from{filter:brightness(.9);transform:scale(.995)}to{filter:brightness(1.3);transform:scale(1.01)}}
+@keyframes shine{0%,65%{transform:translateX(-70%)}100%{transform:translateX(70%)}}
+@media(min-width:760px){main{grid-template-columns:1fr 1fr}.card:first-child,.card:nth-child(2){min-height:270px;display:grid;place-items:center}.card:nth-child(3),.card:nth-child(4){min-height:230px;display:grid;place-items:center}}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="wrap">
+  <div class="top"><span>Official sound system</span><span>DJ JW • JW</span></div>
+  <h1 class="brand">DJ JW</h1>
+  <div class="tag">JEHOVAH WITNESS</div>
+  <main>
+    <section class="card"><h2 class="message one">DJ JW IN THE BUILDING</h2></section>
+    <section class="card"><h2 class="message two">IM COMING TO YOUR BIRTHDAY!</h2></section>
+    <section class="card"><h2 class="message three">IF IT AIN'T DJ JW I AINT LISTENING</h2></section>
+    <section class="card"><h2 class="message four">300 TERRABYTES</h2></section>
+  </main>
+  <div class="footer">IF IT AIN'T DJ JW · I AIN'T LISTENING</div>
+</div>
+</body>
+</html>
